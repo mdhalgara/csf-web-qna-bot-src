@@ -124,8 +124,11 @@ namespace Microsoft.BotBuilderSamples.Bots
                     var htmlDocument = new HtmlDocument();
                     htmlDocument.LoadHtml(response);
 
-                    var htmlNav = htmlDocument.CreateNavigator();
-                    response = htmlNav.SelectSingleNode(selector).Value;
+                    var content = htmlDocument.DocumentNode.SelectSingleNode(selector);
+                    var removeDivChild = content.FirstChild;
+                    content.RemoveChild(removeDivChild);
+
+                    response = content.OuterHtml;
                 }
 
                 //create a HTML to markdown converter
