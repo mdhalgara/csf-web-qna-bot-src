@@ -99,7 +99,7 @@ namespace Microsoft.BotBuilderSamples.Bots
 
         private static Activity GetInitialActivity()
         {
-            var reply = MessageFactory.Text("Please tell me who you are so I can better assist you.");
+            var reply = MessageFactory.Text("Hello, please tell me who you are so I can better assist you.");
             reply.SuggestedActions = new SuggestedActions
             {
                 Actions = new List<CardAction>
@@ -117,7 +117,7 @@ namespace Microsoft.BotBuilderSamples.Bots
             using (var httpClient = new HttpClient())
             {
                 const string requestUrl = "https://myteamcare.org/help";
-                var selector = isMember ? "//div[@data-tab-id='members']" : "//div[@data-tab-id='providers']";
+                var selector = isMember ? "//div[@data-tab-id='members']/div" : "//div[@data-tab-id='providers']/div";
                 const string searchString = "<h2 class=\"questionLinksBlock__title\">";
 
                 var response = await httpClient.GetStringAsync(requestUrl);
@@ -130,7 +130,7 @@ namespace Microsoft.BotBuilderSamples.Bots
                     var removeDivChild = content.FirstChild;
                     content.RemoveChild(removeDivChild);
 
-                    response = content.OuterHtml;
+                    response = content.InnerHtml;
                 }
 
                 //create a HTML to markdown converter
