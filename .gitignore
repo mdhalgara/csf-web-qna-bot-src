@@ -3,4 +3,4 @@
 obj/**
 bin/**
 runtimes/**
-/.vs/
+.vs
