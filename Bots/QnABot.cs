@@ -126,7 +126,7 @@ namespace Microsoft.BotBuilderSamples.Bots
             var actions = await GetHowToDataAsync(isMember);
             var cardActions = actions.Select(action => new CardAction
             {
-                Title = action.Key, Type = ActionTypes.OpenUrl, Value = action.Value
+                Title = action.Key, Type = ActionTypes.ImBack, Value = action.Value
             }).ToList();
 
             reply.SuggestedActions = new SuggestedActions
