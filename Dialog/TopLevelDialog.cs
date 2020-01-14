@@ -3,6 +3,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Builder.Dialogs.Choices;
 using QnABot.Helpers; 
 
 #endregion
@@ -49,7 +50,7 @@ namespace QnABot.Dialog
         {
             // Set the user's name to what they entered in response to the name prompt.
             var userProfile = (UserProfile)stepContext.Values[UserInfo];
-            var userType = (string)stepContext.Result;
+            var userType = stepContext.Context.Activity.Text?.Trim();
 
             userProfile.IsMember = !string.IsNullOrWhiteSpace(userType) &&
                                    userType.Equals("member", StringComparison.InvariantCultureIgnoreCase);
@@ -66,7 +67,6 @@ namespace QnABot.Dialog
                 await stepContext.Context.SendActivityAsync(actions, cancellationToken: cancellationToken);
             }
 
-            // Ask the user to enter their age.
             return await stepContext.NextAsync(null, cancellationToken);
         }
 

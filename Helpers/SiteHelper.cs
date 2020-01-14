@@ -23,6 +23,9 @@ namespace QnABot.Helpers
         public static Activity GetInitialUserActions()
         {
             var reply = MessageFactory.Text("Hello, please tell me who you are so I can better assist you.");
+            reply.Type = ActivityTypes.Message;
+            reply.TextFormat = TextFormatTypes.Plain;
+
             reply.SuggestedActions = new SuggestedActions
             {
                 Actions = new List<CardAction>
