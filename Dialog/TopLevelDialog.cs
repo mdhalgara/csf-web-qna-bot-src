@@ -41,8 +41,8 @@ namespace QnABot.Dialog
             var reply = SiteHelper.GetInitialUserActions();
 
             //prompt for user type
-            var response =  await stepContext.Context.SendActivityAsync(reply, cancellationToken);
-            return await stepContext.NextAsync(response, cancellationToken);
+            await stepContext.Context.SendActivityAsync(reply, cancellationToken);
+            return await stepContext.NextAsync(null, cancellationToken);
         }
 
         private static async Task<DialogTurnResult> CommonQuestionsStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
