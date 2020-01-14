@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Builder.AI.QnA;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
-using Microsoft.BotBuilderSamples.Utils;
+using QnABot.Utils;
 
-namespace Microsoft.BotBuilderSamples.Dialog
+namespace QnABot.Dialog
 {
     /// <summary>
     /// QnAMaker action builder class

@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-namespace Microsoft.BotBuilderSamples.Utils
+namespace QnABot.Utils
 {
     /// <summary>
     /// QnA dialog response options class.
