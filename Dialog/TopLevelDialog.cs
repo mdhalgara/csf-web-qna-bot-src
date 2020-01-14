@@ -1,12 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Schema;
 using QnABot.Helpers;
 
 namespace QnABot.Dialog
@@ -20,14 +17,14 @@ namespace QnABot.Dialog
             : base(nameof(TopLevelDialog))
         {
             //AddDialog(new TextPrompt(nameof(TextPrompt)));
-            AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
+            //AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
             //AddDialog(new NumberPrompt<int>(nameof(NumberPrompt<int>)));
             //AddDialog(new ReviewSelectionDialog());
 
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 UserTypeStepAsync,
-                CommonQuestionsStepAsync,
+                CommonQuestionsStepAsync
                 //AgeStepAsync,
                 //StartSelectionStepAsync,
                 //AcknowledgementStepAsync,
@@ -41,9 +38,10 @@ namespace QnABot.Dialog
             // Create an object in which to collect the user's information within the dialog.
             stepContext.Values[UserInfo] = new UserProfile();
             var reply = SiteHelper.GetInitialUserActions();
+
             //prompt for user type
-            await stepContext.Context.SendActivityAsync(reply, cancellationToken);
-            return await stepContext.NextAsync(null, cancellationToken);
+            var response =  await stepContext.Context.SendActivityAsync(reply, cancellationToken);
+            return await stepContext.NextAsync(response, cancellationToken);
         }
 
         private static async Task<DialogTurnResult> CommonQuestionsStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)

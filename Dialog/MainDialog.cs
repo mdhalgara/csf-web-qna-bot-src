@@ -18,7 +18,6 @@ namespace QnABot.Dialog
             _userState = userState;
 
             AddDialog(new TopLevelDialog());
-
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 InitialStepAsync,
