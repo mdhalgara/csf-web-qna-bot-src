@@ -1,10 +1,11 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License.
-
+﻿#region Namespaces
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
-using QnABot.Helpers;
+using QnABot.Helpers; 
+
+#endregion
 
 namespace QnABot.Dialog
 {
@@ -48,7 +49,10 @@ namespace QnABot.Dialog
         {
             // Set the user's name to what they entered in response to the name prompt.
             var userProfile = (UserProfile)stepContext.Values[UserInfo];
-            userProfile.IsMember = (bool)stepContext.Result;
+            var userType = (string)stepContext.Result;
+
+            userProfile.IsMember = !string.IsNullOrWhiteSpace(userType) &&
+                                   userType.Equals("member", StringComparison.InvariantCultureIgnoreCase);
 
             // Take the input from the user and create the appropriate response.
             var commonQuestions = await SiteHelper.GetCommonQuestionsAsync(userProfile.IsMember);
