@@ -1,4 +1,6 @@
 ﻿#region Namespaces
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -65,8 +67,13 @@ namespace QnABot.Helpers
             }
         }
 
-        public static async Task<Activity> GetHowToActionsAsync(bool isMember = true)
+        public static async Task<Activity> GetHowToActionsAsync(string siteUrl, bool isMember = true)
         {
+            if (string.IsNullOrWhiteSpace(siteUrl))
+            {
+                throw new ArgumentNullException(nameof(siteUrl));
+            }
+
             var reply = MessageFactory.Text("Hello member, please choose from options below.");
             var actions = await GetHowToDataAsync(isMember);
             var cardActions = actions.Select(action => new CardAction

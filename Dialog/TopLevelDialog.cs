@@ -3,7 +3,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Builder.Dialogs.Choices;
 using QnABot.Helpers; 
 
 #endregion
@@ -14,6 +13,7 @@ namespace QnABot.Dialog
     {
         // Define value names for values tracked inside the dialogs.
         private const string UserInfo = "value-userInfo";
+        private const string SiteUrl = "https://myteamcare.org";
 
         public TopLevelDialog()
             : base(nameof(TopLevelDialog))
@@ -64,8 +64,8 @@ namespace QnABot.Dialog
                 await stepContext.Context.SendActivityAsync(commonQuestions, cancellationToken: cancellationToken);
 
                 //send follow-up prompts
-                var actions = await SiteHelper.GetHowToActionsAsync(userProfile.IsMember);
-                await stepContext.Context.SendActivityAsync(actions, cancellationToken: cancellationToken);
+                var actions = await SiteHelper.GetHowToActionsAsync(SiteUrl, userProfile.IsMember);
+                await stepContext.Context.SendActivityAsync(actions, cancellationToken);
             }
 
             return await stepContext.NextAsync(null, cancellationToken);
