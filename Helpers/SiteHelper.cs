@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 using Html2Markdown;
 using HtmlAgilityPack;
 using Microsoft.Bot.Builder;
-using Microsoft.Bot.Schema; 
+using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Builder.Dialogs.Choices;
+using Microsoft.Bot.Schema;
 
 #endregion
 
@@ -20,22 +22,20 @@ namespace QnABot.Helpers
         private static Dictionary<string, string> HowToForMember;
         private static Dictionary<string, string> HowToForProvider;
 
-        public static Activity GetInitialUserActions()
+        public static PromptOptions GetUserTypeChoices()
         {
-            var reply = MessageFactory.Text("Hello, please tell me who you are so I can better assist you.");
-            reply.Type = ActivityTypes.Message;
-            reply.TextFormat = TextFormatTypes.Plain;
-
-            reply.SuggestedActions = new SuggestedActions
+            var options = new PromptOptions
             {
-                Actions = new List<CardAction>
+                Prompt = MessageFactory.Text("Hello, please tell me who you are so I can better assist you."),
+                Choices = new List<Choice>
                 {
-                    new CardAction { Title = "Member", Type = ActionTypes.ImBack, Value = "Member" },
-                    new CardAction { Title = "Provider", Type = ActionTypes.ImBack, Value = "Provider" }
-                }
+                    new Choice("Member"),
+                    new Choice("Provider")
+                }, 
+                Style = ListStyle.SuggestedAction
             };
 
-            return reply;
+            return options;
         }
 
         public static async Task<string> GetCommonQuestionsAsync(bool isMember = true)

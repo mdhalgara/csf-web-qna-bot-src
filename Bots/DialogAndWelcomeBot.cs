@@ -27,8 +27,9 @@ namespace QnABot.Bots
             {
                 if (member.Id != turnContext.Activity.Recipient.Id)
                 {
-                    var reply = SiteHelper.GetInitialUserActions();
-                    await turnContext.SendActivityAsync(reply, cancellationToken);
+                    //intentionally not do anything.
+                    //var reply = SiteHelper.GetUserTypeChoices();
+                    //await turnContext.SendActivityAsync(reply, cancellationToken);
                 }
             }
         }

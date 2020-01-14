@@ -18,8 +18,10 @@ namespace QnABot.Dialog
         public TopLevelDialog()
             : base(nameof(TopLevelDialog))
         {
+            InitialDialogId = nameof(TopLevelDialog);
+
             //AddDialog(new TextPrompt(nameof(TextPrompt)));
-            //AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
+            AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
             //AddDialog(new NumberPrompt<int>(nameof(NumberPrompt<int>)));
             //AddDialog(new ReviewSelectionDialog());
 
@@ -39,11 +41,10 @@ namespace QnABot.Dialog
         {
             // Create an object in which to collect the user's information within the dialog.
             stepContext.Values[UserInfo] = new UserProfile();
-            var reply = SiteHelper.GetInitialUserActions();
+            var options = SiteHelper.GetUserTypeChoices();
 
             //prompt for user type
-            await stepContext.Context.SendActivityAsync(reply, cancellationToken);
-            return await stepContext.NextAsync(null, cancellationToken);
+            return await stepContext.PromptAsync(nameof(ChoicePrompt), options, cancellationToken);
         }
 
         private static async Task<DialogTurnResult> CommonQuestionsStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
