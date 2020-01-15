@@ -89,9 +89,10 @@ namespace QnABot.Helpers
             {
                 var heroCard = new HeroCard
                 {
-                    Title = action.Key,
                     Buttons = new List<CardAction>
-                        {new CardAction(ActionTypes.OpenUrl, action.Key, value: action.Value)}
+                    {
+                        new CardAction(ActionTypes.OpenUrl, action.Key, value: action.Value)
+                    }
                 }.ToAttachment();
 
                 reply.Attachments.Add(heroCard);
