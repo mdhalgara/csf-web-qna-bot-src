@@ -20,11 +20,6 @@ namespace QnABot.Helpers
 {
     public static class SiteHelper
     {
-        private static string CommonQuestionsMember;
-        private static string CommonQuestionsProvider;
-        private static Dictionary<string, string> HowToForMember;
-        private static Dictionary<string, string> HowToForProvider;
-
         public static PromptOptions GetUserTypeChoices()
         {
             var options = new PromptOptions
@@ -88,7 +83,6 @@ namespace QnABot.Helpers
             {
                 var heroCard = new HeroCard
                 {
-                    Title = howToArticle.Item1,
                     Images = new List<CardImage>
                     {
                         new CardImage(howToArticle.Item2)
