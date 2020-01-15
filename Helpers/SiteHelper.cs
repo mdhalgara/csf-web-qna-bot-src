@@ -90,6 +90,7 @@ namespace QnABot.Helpers
             {
                 var heroCard = new HeroCard
                 {
+                    Title = howToArticle.Item1,
                     Images = new List<CardImage>
                     {
                         new CardImage(howToArticle.Item2)
@@ -108,7 +109,6 @@ namespace QnABot.Helpers
 
         private static async Task<IEnumerable<Tuple<string, string, string>>> GetHowToDataAsync(bool isMember = true)
         {
-            var sb = new StringBuilder();
             var result = new List<Tuple<string, string, string>>();
             using (var httpClient = new HttpClient())
             {
@@ -131,7 +131,7 @@ namespace QnABot.Helpers
                             var imgElement = element.Element("img");
                             //get display text
                             var displayText = !string.IsNullOrWhiteSpace(element.InnerText) ? element.InnerText.Trim() : element.InnerText;
-                            result.Add(Tuple.Create(displayText, imgElement.GetAttributeValue("img", string.Empty),
+                            result.Add(Tuple.Create(displayText, imgElement.GetAttributeValue("src", string.Empty),
                                 element.GetAttributeValue("href", string.Empty)));
                         }
                     }
