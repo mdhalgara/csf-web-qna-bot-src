@@ -87,10 +87,7 @@ namespace QnABot.Helpers
                     {
                         new CardImage(howToArticle.Item2)
                     },
-                    Buttons = new List<CardAction>
-                    {
-                        new CardAction(ActionTypes.OpenUrl, howToArticle.Item1, value: howToArticle.Item3)
-                    }
+                    Tap = new CardAction(ActionTypes.OpenUrl, howToArticle.Item1, value: howToArticle.Item3)
                 };
 
                 reply.Attachments.Add(heroCard.ToAttachment());
