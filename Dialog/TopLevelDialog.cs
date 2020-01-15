@@ -3,6 +3,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
+using QnABot.Common;
 using QnABot.Helpers; 
 
 #endregion
@@ -21,7 +22,8 @@ namespace QnABot.Dialog
             InitialDialogId = nameof(TopLevelDialog);
 
             //AddDialog(new TextPrompt(nameof(TextPrompt)));
-            AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
+            AddDialog(new ChoicePrompt(FlowState.FindUserType.ToString()));
+            AddDialog(new ChoicePrompt(FlowState.AnswerCommonQuestions.ToString()));
             //AddDialog(new NumberPrompt<int>(nameof(NumberPrompt<int>)));
             //AddDialog(new ReviewSelectionDialog());
 
@@ -44,7 +46,7 @@ namespace QnABot.Dialog
             var options = SiteHelper.GetUserTypeChoices();
 
             //prompt for user type
-            return await stepContext.PromptAsync(nameof(ChoicePrompt), options, cancellationToken);
+            return await stepContext.PromptAsync(FlowState.FindUserType.ToString(), options, cancellationToken);
         }
 
         private static async Task<DialogTurnResult> CommonQuestionsStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)

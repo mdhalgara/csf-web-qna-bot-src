@@ -72,26 +72,30 @@ namespace QnABot.Helpers
             }
         }
 
-        public static async Task<Activity> GetHowToActionsAsync(string siteUrl, bool isMember = true)
+        public static async Task<IMessageActivity> GetHowToActionsAsync(string siteUrl, bool isMember = true)
         {
             if (string.IsNullOrWhiteSpace(siteUrl))
             {
                 throw new ArgumentNullException(nameof(siteUrl));
             }
 
-            var reply = MessageFactory.Text("Hello member, please choose from options below.");
-            var actions = await GetHowToDataAsync(isMember);
-            var cardActions = actions.Select(action => new CardAction
-            {
-                Title = action.Key,
-                Type = ActionTypes.OpenUrl,
-                Value = action.Value
-            }).ToList();
+            var attachments = new List<Attachment>();
+            var reply = MessageFactory.Attachment(attachments);
+            
+            //MessageFactory.Text("Hello member, please choose from options below.");
 
-            reply.SuggestedActions = new SuggestedActions
+            var actions = await GetHowToDataAsync(isMember);
+            foreach (var action in actions)
             {
-                Actions = cardActions
-            };
+                var heroCard = new HeroCard
+                {
+                    Title = action.Key,
+                    Buttons = new List<CardAction>
+                        {new CardAction(ActionTypes.OpenUrl, action.Key, value: action.Value)}
+                }.ToAttachment();
+
+                reply.Attachments.Add(heroCard);
+            }
 
             return reply;
         }
