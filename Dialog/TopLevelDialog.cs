@@ -70,7 +70,7 @@ namespace QnABot.Dialog
                 await stepContext.Context.SendActivityAsync(actions, cancellationToken);
             }
 
-            return await stepContext.NextAsync(null, cancellationToken);
+            return await stepContext.EndDialogAsync(cancellationToken: cancellationToken);
         }
 
         //private async Task<DialogTurnResult> StartSelectionStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
