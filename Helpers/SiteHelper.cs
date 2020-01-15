@@ -34,7 +34,7 @@ namespace QnABot.Helpers
                 {
                     new Choice("Member"),
                     new Choice("Provider")
-                }, 
+                },
                 Style = ListStyle.SuggestedAction
             };
 
@@ -82,10 +82,10 @@ namespace QnABot.Helpers
 
             var attachments = new List<Attachment>();
             var reply = MessageFactory.Attachment(attachments);
-            
+
             //MessageFactory.Text("Hello member, please choose from options below.");
 
-            var howToArticles = await GetHowToDataAsync(isMember);
+            var howToArticles = await GetHowToDataAsync(siteUrl, isMember);
             foreach (var howToArticle in howToArticles)
             {
                 var heroCard = new HeroCard
@@ -107,7 +107,7 @@ namespace QnABot.Helpers
             return reply;
         }
 
-        private static async Task<IEnumerable<Tuple<string, string, string>>> GetHowToDataAsync(bool isMember = true)
+        private static async Task<IEnumerable<Tuple<string, string, string>>> GetHowToDataAsync(string siteUrl, bool isMember = true)
         {
             var result = new List<Tuple<string, string, string>>();
             using (var httpClient = new HttpClient())
@@ -124,15 +124,16 @@ namespace QnABot.Helpers
                     var section = htmlDocument.DocumentNode.SelectSingleNode(selector);
                     if (section.HasChildNodes)
                     {
-                        var elements = section.Descendants("a");
-                        foreach (var element in elements)
+                        var linkElements = section.Descendants("a");
+                        foreach (var linkElement in linkElements)
                         {
                             //get the img tag
-                            var imgElement = element.Element("img");
+                            var imgElement = linkElement.Element("img");
+                            var imgSource = imgElement?.GetAttributeValue("src", string.Empty);
                             //get display text
-                            var displayText = !string.IsNullOrWhiteSpace(element.InnerText) ? element.InnerText.Trim() : element.InnerText;
-                            result.Add(Tuple.Create(displayText, imgElement.GetAttributeValue("src", string.Empty),
-                                element.GetAttributeValue("href", string.Empty)));
+                            var displayText = !string.IsNullOrWhiteSpace(linkElement.InnerText) ? linkElement.InnerText.Trim() : linkElement.InnerText;
+                            result.Add(Tuple.Create(displayText, !string.IsNullOrWhiteSpace(imgSource) ? $"{siteUrl}{imgSource}" : null,
+                                linkElement.GetAttributeValue("href", string.Empty)));
                         }
                     }
                 }
