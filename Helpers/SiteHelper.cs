@@ -92,7 +92,11 @@ namespace QnABot.Helpers
                 {
                     Images = new List<CardImage>
                     {
-                        new CardImage(howToArticle.Item2, null, new CardAction(ActionTypes.OpenUrl, howToArticle.Item1, value: howToArticle.Item3))
+                        new CardImage(howToArticle.Item2)
+                    },
+                    Buttons = new List<CardAction>
+                    {
+                        new CardAction(ActionTypes.OpenUrl, howToArticle.Item1, value: howToArticle.Item3)
                     }
                 }.ToAttachment();
 
