@@ -70,10 +70,6 @@ namespace QnABot.Dialog
             {
                 // Respond to the user.
                 await stepContext.Context.SendActivityAsync(commonQuestions, cancellationToken: cancellationToken);
-
-                //send follow-up prompts
-                var actions = await SiteHelper.GetHowToActionsAsync(SiteUrl, userProfile.IsMember);
-                await stepContext.Context.SendActivityAsync(actions, cancellationToken);
             }
 
             return await stepContext.NextAsync(null, cancellationToken);
