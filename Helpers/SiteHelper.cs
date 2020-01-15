@@ -83,6 +83,7 @@ namespace QnABot.Helpers
             {
                 var heroCard = new HeroCard
                 {
+                    Title = howToArticle.Item1,
                     Images = new List<CardImage>
                     {
                         new CardImage(howToArticle.Item2)
