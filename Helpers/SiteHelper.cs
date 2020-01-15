@@ -83,8 +83,6 @@ namespace QnABot.Helpers
             var attachments = new List<Attachment>();
             var reply = MessageFactory.Attachment(attachments);
 
-            //MessageFactory.Text("Hello member, please choose from options below.");
-
             var howToArticles = await GetHowToDataAsync(siteUrl, isMember);
             foreach (var howToArticle in howToArticles)
             {
@@ -99,9 +97,9 @@ namespace QnABot.Helpers
                     {
                         new CardAction(ActionTypes.OpenUrl, howToArticle.Item1, value: howToArticle.Item3)
                     }
-                }.ToAttachment();
+                };
 
-                reply.Attachments.Add(heroCard);
+                reply.Attachments.Add(heroCard.ToAttachment());
             }
 
             return reply;
@@ -129,11 +127,14 @@ namespace QnABot.Helpers
                         {
                             //get the img tag
                             var imgElement = linkElement.Element("img");
-                            var imgSource = imgElement?.GetAttributeValue("src", string.Empty);
+                            var imageLink = imgElement?.GetAttributeValue("src", string.Empty);
+                            var articleLink = linkElement.GetAttributeValue("href", string.Empty);
+
                             //get display text
                             var displayText = !string.IsNullOrWhiteSpace(linkElement.InnerText) ? linkElement.InnerText.Trim() : linkElement.InnerText;
-                            result.Add(Tuple.Create(displayText, !string.IsNullOrWhiteSpace(imgSource) ? $"{siteUrl}{imgSource}" : null,
-                                linkElement.GetAttributeValue("href", string.Empty)));
+
+                            result.Add(Tuple.Create(displayText, !string.IsNullOrWhiteSpace(imageLink) ? $"{siteUrl}{imageLink}" : null,
+                                $"{siteUrl}{articleLink}"));
                         }
                     }
                 }
