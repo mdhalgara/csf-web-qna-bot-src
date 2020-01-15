@@ -98,7 +98,7 @@ namespace QnABot.Dialog
             }
             else
             {
-                var text = MessageFactory.Text("This selection has been developed.");
+                var text = MessageFactory.Text("This selection has NOT been developed yet.");
                 await stepContext.Context.SendActivityAsync(text, cancellationToken);
             }
 
