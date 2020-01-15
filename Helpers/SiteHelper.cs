@@ -12,6 +12,7 @@ using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
 using Microsoft.Bot.Schema;
+using Microsoft.Extensions.DependencyInjection;
 
 #endregion
 
@@ -84,14 +85,14 @@ namespace QnABot.Helpers
             
             //MessageFactory.Text("Hello member, please choose from options below.");
 
-            var actions = await GetHowToDataAsync(isMember);
-            foreach (var action in actions)
+            var howToArticles = await GetHowToDataAsync(isMember);
+            foreach (var howToArticle in howToArticles)
             {
                 var heroCard = new HeroCard
                 {
-                    Buttons = new List<CardAction>
+                    Images = new List<CardImage>
                     {
-                        new CardAction(ActionTypes.OpenUrl, action.Key, value: action.Value)
+                        new CardImage(howToArticle.Item2, null, new CardAction(ActionTypes.OpenUrl, howToArticle.Item1, value: howToArticle.Item3))
                     }
                 }.ToAttachment();
 
@@ -101,10 +102,10 @@ namespace QnABot.Helpers
             return reply;
         }
 
-        private static async Task<Dictionary<string, string>> GetHowToDataAsync(bool isMember = true)
+        private static async Task<IEnumerable<Tuple<string, string, string>>> GetHowToDataAsync(bool isMember = true)
         {
             var sb = new StringBuilder();
-            var dict = new Dictionary<string, string>();
+            var result = new List<Tuple<string, string, string>>();
             using (var httpClient = new HttpClient())
             {
                 const string requestUrl = "https://myteamcare.org/help";
@@ -122,30 +123,17 @@ namespace QnABot.Helpers
                         var elements = section.Descendants("a");
                         foreach (var element in elements)
                         {
-                            //remove img tag
+                            //get the img tag
                             var imgElement = element.Element("img");
-                            if (imgElement != null)
-                            {
-                                element.RemoveChild(imgElement);
-                            }
-                            else
-                            {
-                                break;
-                            }
-
                             //get display text
                             var displayText = !string.IsNullOrWhiteSpace(element.InnerText) ? element.InnerText.Trim() : element.InnerText;
-                            dict.Add(displayText, element.GetAttributeValue("href", string.Empty));
+                            result.Add(Tuple.Create(displayText, imgElement.GetAttributeValue("img", string.Empty),
+                                element.GetAttributeValue("href", string.Empty)));
                         }
                     }
-
-                    response = sb.ToString();
-                    //create a HTML to markdown converter
-                    var converter = new Converter();
-                    var markdown = converter.Convert(response);
                 }
 
-                return await Task.FromResult(dict);
+                return await Task.FromResult(result);
             }
         }
     }
