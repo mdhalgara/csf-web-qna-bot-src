@@ -27,7 +27,7 @@ namespace QnABot.Bots
             {
                 if (member.Id != turnContext.Activity.Recipient.Id)
                 {
-                    var reply = MessageFactory.Text($"Welcome, I'm {member.Name}. " +
+                    var reply = MessageFactory.Text($"Welcome, I'm {turnContext.Activity.From.Name}. " +
                                                     "Type anything to get started.");
                     await turnContext.SendActivityAsync(reply, cancellationToken);
                 }

@@ -40,11 +40,16 @@ namespace QnABot.Helpers
             return options;
         }
 
-        public static async Task<string> GetCommonQuestionsAsync(bool isMember = true)
+        public static async Task<string> GetCommonQuestionsAsync(string siteUrl, bool isMember = true)
         {
+            if (string.IsNullOrWhiteSpace(siteUrl))
+            {
+                throw new ArgumentNullException(nameof(siteUrl));
+            }
+
             using (var httpClient = new HttpClient())
             {
-                const string requestUrl = "https://myteamcare.org/help";
+                var requestUrl = $"{siteUrl}/help";
                 var selector = isMember ? "//div[@data-tab-id='members']/div" : "//div[@data-tab-id='providers']/div";
 
                 var response = await httpClient.GetStringAsync(requestUrl);

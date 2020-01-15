@@ -57,7 +57,7 @@ namespace QnABot.Dialog
                                    userType.Equals("member", StringComparison.InvariantCultureIgnoreCase);
 
             // Take the input from the user and create the appropriate response.
-            var commonQuestions = await SiteHelper.GetCommonQuestionsAsync(userProfile.IsMember);
+            var commonQuestions = await SiteHelper.GetCommonQuestionsAsync(SiteUrl, userProfile.IsMember);
             if (!string.IsNullOrWhiteSpace(commonQuestions))
             {
                 // Respond to the user.
