@@ -2,7 +2,9 @@
 {
     public enum FlowState
     {
-        FindUserType = 0,
-        AnswerCommonQuestions = 1
+        UserType = 0,
+        CommonQuestions = 1,
+        NavOptions,
+        HowTos
     }
 }

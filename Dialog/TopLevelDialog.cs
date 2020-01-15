@@ -2,7 +2,9 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Builder.Dialogs.Choices;
 using QnABot.Common;
 using QnABot.Helpers; 
 
@@ -22,15 +24,19 @@ namespace QnABot.Dialog
             InitialDialogId = nameof(TopLevelDialog);
 
             //AddDialog(new TextPrompt(nameof(TextPrompt)));
-            AddDialog(new ChoicePrompt(FlowState.FindUserType.ToString()));
-            AddDialog(new ChoicePrompt(FlowState.AnswerCommonQuestions.ToString()));
+            AddDialog(new ChoicePrompt(FlowState.UserType.ToString()));
+            AddDialog(new ChoicePrompt(FlowState.CommonQuestions.ToString()));
+            AddDialog(new ChoicePrompt(FlowState.NavOptions.ToString()));
+            AddDialog(new ChoicePrompt(FlowState.HowTos.ToString()));
             //AddDialog(new NumberPrompt<int>(nameof(NumberPrompt<int>)));
             //AddDialog(new ReviewSelectionDialog());
 
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                 UserTypeStepAsync,
-                CommonQuestionsStepAsync
+                CommonQuestionsStepAsync,
+                CommonNavOptionStepAsync,
+                HowToStepAsync
                 //AgeStepAsync,
                 //StartSelectionStepAsync,
                 //AcknowledgementStepAsync,
@@ -46,7 +52,7 @@ namespace QnABot.Dialog
             var options = SiteHelper.GetUserTypeChoices();
 
             //prompt for user type
-            return await stepContext.PromptAsync(FlowState.FindUserType.ToString(), options, cancellationToken);
+            return await stepContext.PromptAsync(FlowState.UserType.ToString(), options, cancellationToken);
         }
 
         private static async Task<DialogTurnResult> CommonQuestionsStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
@@ -68,6 +74,36 @@ namespace QnABot.Dialog
                 //send follow-up prompts
                 var actions = await SiteHelper.GetHowToActionsAsync(SiteUrl, userProfile.IsMember);
                 await stepContext.Context.SendActivityAsync(actions, cancellationToken);
+            }
+
+            return await stepContext.NextAsync(null, cancellationToken);
+        }
+
+        private static async Task<DialogTurnResult> CommonNavOptionStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            //get common nav options for all user
+            var options = SiteHelper.GetCommonNavOptions();
+
+            //prompt for navigation options to take next.
+            return await stepContext.PromptAsync(FlowState.NavOptions.ToString(), options, cancellationToken);
+        }
+
+        private static async Task<DialogTurnResult> HowToStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            var userProfile = (UserProfile)stepContext.Values[UserInfo];
+            var selectedNavOption = stepContext.Context.Activity.Text?.Trim();
+
+            if (!string.IsNullOrWhiteSpace(selectedNavOption) &&
+                selectedNavOption.Equals("Show How To", StringComparison.InvariantCultureIgnoreCase))
+            {
+                //send how to items
+                var actions = await SiteHelper.GetHowToActionsAsync(SiteUrl, userProfile.IsMember);
+                await stepContext.Context.SendActivityAsync(actions, cancellationToken);
+            }
+            else
+            {
+                var text = MessageFactory.Text("This selection has been developed.");
+                await stepContext.Context.SendActivityAsync(text, cancellationToken);
             }
 
             return await stepContext.EndDialogAsync(cancellationToken: cancellationToken);

@@ -36,6 +36,25 @@ namespace QnABot.Helpers
             return options;
         }
 
+        public static PromptOptions GetCommonNavOptions()
+        {
+            var options = new PromptOptions
+            {
+                Prompt = MessageFactory.Text("Hello member, please choose from below options."),
+                Choices = new List<Choice>
+                {
+                    new Choice("Show How To"),
+                    new Choice("Login"),
+                    new Choice("Forgot Username"),
+                    new Choice("Forgot Password"),
+                    new Choice("Contact Customer Care")
+                },
+                Style = ListStyle.SuggestedAction
+            };
+
+            return options;
+        }
+
         public static async Task<string> GetCommonQuestionsAsync(string siteUrl, bool isMember = true)
         {
             if (string.IsNullOrWhiteSpace(siteUrl))
